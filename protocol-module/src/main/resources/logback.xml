@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<configuration>
+	<property name="LOG_PATH" value=" "/>
+
+	<statusListener class="ch.qos.logback.core.status.OnConsoleStatusListener" />
+	<appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+		<filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+			<level>DEBUG</level>
+		</filter>
+		<encoder>
+			<pattern>%date{HH:mm:ss.SSS} [%thread] %-5level [%logger{36}][%L] - %msg%n</pattern>
+			<charset>UTF-8</charset>
+		</encoder>
+	</appender>
+
+	<appender name="CONSOLEFILE" class="ch.qos.logback.core.FileAppender">
+		<file>${LOG_PATH}/opt/visdata/srvlogs/monitor/PortalConsole.log</file>
+		<append>false</append>
+		<filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+			<level>DEBUG</level>
+		</filter>
+		<encoder>
+			<pattern>%date [%thread] %-5level %logger[%L] - %msg%n</pattern>
+			<charset>UTF-8</charset>
+		</encoder>
+	</appender>
+
+	<appender name="ALLROLLING" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>${LOG_PATH}/opt/visdata/srvlogs/monitor/PortalAllLogs.log</file>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<!-- rollover daily -->
+			<fileNamePattern>${LOG_PATH}/opt/visdata/srvlogs/monitor/PortalAllLogs-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+			<timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+				<!-- or whenever the file size reaches 20MB -->
+				<maxFileSize>10MB</maxFileSize>
+			</timeBasedFileNamingAndTriggeringPolicy>
+		</rollingPolicy>
+		<encoder>
+			<pattern>%date [%thread] %-5level %logger[%L] - %msg%n</pattern>
+			<charset>UTF-8</charset>
+		</encoder>
+	</appender>
+
+	<appender name="PUSHSERVERROLLING" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>${LOG_PATH}/opt/visdata/srvlogs/monitor/DashServer/PushServerAllLogs.log</file>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<!-- rollover daily -->
+			<fileNamePattern>${LOG_PATH}/opt/visdata/srvlogs/monitor/DashServer/PushServerAllLogs-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+			<timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+				<!-- or whenever the file size reaches 20MB -->
+				<maxFileSize>10MB</maxFileSize>
+			</timeBasedFileNamingAndTriggeringPolicy>
+		</rollingPolicy>
+		<encoder>
+			<pattern>%date [%thread] %-5level %logger[%L] - %msg%n</pattern>
+			<charset>UTF-8</charset>
+		</encoder>
+	</appender>
+
+
+	<appender name="TRACELOG" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>${LOG_PATH}/opt/visdata/srvlogs/monitor/PortalTrace.log</file>
+		<rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
+			<fileNamePattern>${LOG_PATH}/opt/visdata/srvlogs/monitor/PortalTrace-%i.log</fileNamePattern>
+			<minIndex>1</minIndex>
+			<maxIndex>5</maxIndex>
+		</rollingPolicy>
+		<triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+			<maxFileSize>5MB</maxFileSize>
+		</triggeringPolicy>
+		<filter class="ch.qos.logback.classic.filter.LevelFilter">
+			<level>TRACE</level>
+			<onMatch>ACCEPT</onMatch>
+			<onMismatch>DENY</onMismatch>
+		</filter>
+		<encoder>
+			<pattern>%date [%thread] %-5level %logger[%L] - %msg%n</pattern>
+			<charset>UTF-8</charset>
+		</encoder>
+	</appender>
+
+	<appender name="ERRORLOG" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>${LOG_PATH}/opt/visdata/srvlogs/monitor/PortalError.log</file>
+		<rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
+			<fileNamePattern>${LOG_PATH}/opt/visdata/srvlogs/monitor/PortalError-%i.log</fileNamePattern>
+			<minIndex>1</minIndex>
+			<maxIndex>5</maxIndex>
+		</rollingPolicy>
+		<triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+			<maxFileSize>5MB</maxFileSize>
+		</triggeringPolicy>
+		<filter class="ch.qos.logback.classic.filter.LevelFilter">
+			<level>ERROR</level>
+			<onMatch>ACCEPT</onMatch>
+			<onMismatch>DENY</onMismatch>
+		</filter>
+		<encoder>
+			<pattern>%date [%thread] %-5level %logger[%L] - %msg%n</pattern>
+			<charset>UTF-8</charset>
+		</encoder>
+	</appender>
+
+	<!--
+
+        <logger name="com.opensymphony.xwork2" level="error"></logger>
+        <logger name="org.springframework" level="error"></logger>
+        <logger name="org.hibernate.SQL" level="DEBUG"></logger>
+        <logger name="org.hibernate.clipType" level="TRACE"></logger>
+        <logger name="net.sf.hibernate.clipType" level="DEBUG"></logger>
+
+     -->
+
+	<logger name="com.dash.portal.pushserver" level="INFO" additivity="false">
+		<appender-ref ref="CONSOLE"/>
+		<appender-ref ref="PUSHSERVERROLLING"/>
+	</logger>
+
+	<logger name="com.dash" level="DEBUG"/>
+	<logger name="com.ibm" level="TRACE"></logger>
+
+	<root level="INFO">
+		<appender-ref ref="CONSOLE" />
+		<appender-ref ref="ALLROLLING" />
+		<appender-ref ref="ERRORLOG" />
+	</root>
+</configuration>

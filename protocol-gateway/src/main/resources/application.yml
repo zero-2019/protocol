@@ -1,0 +1,114 @@
+
+# yml conf must blank
+
+spring:
+  application:
+    name: protocol-gateway
+  datasource:
+    url: jdbc:mysql://${MYSQL_HOST:localhost}:3306/visdata?serverTimezone=UTC&useUnicode=true&characterEncoding=utf8&useSSL=false
+    username: root
+    password: 1234
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    # druid配置
+    type: com.alibaba.druid.pool.DruidDataSource
+    # druid参数调优（可选）
+    # 初始化大小，最小，最大
+    initialSize: 5
+    minIdle: 5
+    maxActive: 20
+    # 配置获取连接等待超时的时间
+    maxWait: 60000
+    # 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒
+    timeBetweenEvictionRunsMillis: 60000
+    # 配置一个连接在池中最小生存的时间，单位是毫秒
+    minEvictableIdleTimeMillis: 300000
+    # 测试连接
+    testWhileIdle: true
+    testOnBorrow: false
+    testOnReturn: false
+    # 打开PSCache，并且指定每个连接上PSCache的大小
+    poolPreparedStatements: true
+    maxPoolPreparedStatementPerConnectionSize: 20
+    # 配置监控统计拦截的filters
+    filters: tat
+    # asyncInit是1.1.4中新增加的配置，如果有initialSize数量较多时，打开会加快应用启动时间
+    asyncInit: true
+
+
+
+
+
+  jackson:
+    serialization:
+      fail_on_empty_beans: false #support the null object serialize
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+    default-property-inclusion: non_null
+
+
+server:
+  port: 8995
+  max-http-header-size: 4048576
+# the eureka config  for  the boot-eureka-start jar
+eureka:
+  instance:
+    statusPageUrlPath: /info
+    healthCheckUrlPath: /health
+    #        docker \u90e8\u7f72\u5f00\u542f
+    prefer-ip-address: true
+  #        ip-address: 127.0.0.1
+  client:
+    serviceUrl:
+      # docker \u90e8\u7f72\u5f00\u542f
+      defaultZone: http://${EUREKA_HOST:localhost}:${EUREKA_PORT:8761}/eureka/
+    register-with-eureka: true
+    fetch-registry: true
+
+
+feign:
+  hystrix:
+    enabled: true
+  httpclient:
+    enabled: true
+  okhttp:
+    enabled: true
+
+logging:
+  level:
+    com:
+      chuangxin:
+        monitor: debug
+
+
+
+swagger:
+  basepackage: com.chuangxin.monitor
+  service:
+    name: protocol-gateway
+    description: gateway 系统服务
+    developer: gateway
+
+zookeeper:
+  ipaddress: ${ZK_HOST:192.168.137.11}
+  port: 2181
+  connectTimeout: 120000
+  datcent-id: ${LOC:BJ2}
+
+# 线上指标监控（ES地址）   版本6.5
+es:
+  url: http://${ES_HOST:192.168.137.11}:9200
+
+#pulsar    2.3.1
+pulsar:
+  service-url: pulsar://${PULSAR_HOST:192.168.137.11}:6650
+  topic:
+    sensor-data: ${TOPIC_SENSOR_DATA:sensor-bj2}
+    algo-output: ${TOPIC_ALGO:algo-bj2}
+  datcent-id: ${LOC:BJ2}
+
+
+bms:
+  host: ${BMS_HOST:172.31.56.41}
+  collect-port: ${BMS_COLLECT_PORT:6060}    #采集端口
+  control-port: ${BMS_CONTROL_PORT:5999}    # 控制端口
+

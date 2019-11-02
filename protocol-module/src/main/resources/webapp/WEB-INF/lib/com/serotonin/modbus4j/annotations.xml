@@ -1,0 +1,5 @@
+<root>
+    <item name='com.serotonin.modbus4j.ModbusFactory'>
+        <annotation name='java.lang.Deprecated'/>
+    </item>
+</root>
